@@ -6,7 +6,16 @@ type Props = {
   children: JSX.Element;
 };
 
-const initialState: State = { users: [] };
+const initialState: State = {
+  users: [
+    {
+      id: crypto.randomUUID(),
+      fullName: 'yassine ofqir-hamma',
+      email: 'yassine.yas98@gmail.com',
+      age: 20,
+    },
+  ],
+};
 
 function ContextProvider({ children }: Props) {
   const [state, dispatch] = useReducer(reducer, initialState);

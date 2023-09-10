@@ -15,6 +15,7 @@ import {
 } from 'valibot';
 
 const UserSchema = object({
+  id: string(),
   fullName: string('Enter your full name', [
     minLength(3, 'the should have a least 3 characters'),
   ]),
@@ -51,6 +52,7 @@ function Form() {
       fullName: '',
       email: '',
       age: NaN,
+      id: crypto.randomUUID(),
     },
     resolver: valibotResolver(UserSchema),
     mode: 'onBlur',
