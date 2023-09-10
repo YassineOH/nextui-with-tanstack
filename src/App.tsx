@@ -1,4 +1,5 @@
 import Form from './components/Form';
+import Table from './components/Table';
 
 function App() {
   return (
@@ -8,6 +9,7 @@ function App() {
       </h1>
       <div className="mx-auto w-1/2">
         <Form />
+        <Table />
       </div>
     </main>
   );

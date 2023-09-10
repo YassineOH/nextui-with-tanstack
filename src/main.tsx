@@ -4,11 +4,14 @@ import { NextUIProvider } from '@nextui-org/react';
 
 import App from './App.tsx';
 import './index.css';
+import ContextProvider from './components/Context.tsx';
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
     <NextUIProvider>
-      <App />
+      <ContextProvider>
+        <App />
+      </ContextProvider>
     </NextUIProvider>
   </React.StrictMode>,
 );

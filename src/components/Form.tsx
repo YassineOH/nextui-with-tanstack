@@ -2,6 +2,7 @@ import { Input, Button } from '@nextui-org/react';
 import { useForm, SubmitHandler } from 'react-hook-form';
 import { DevTool } from '@hookform/devtools';
 import { valibotResolver } from '@hookform/resolvers/valibot';
+import { useAppContext } from '../hooks/context';
 
 import {
   object,
@@ -18,12 +19,28 @@ const UserSchema = object({
     minLength(3, 'the should have a least 3 characters'),
   ]),
   email: string('Enter your email', [email('Invalid email')]),
-  age: number('Enter you age', [minValue(18, 'You should be adult')]),
+  age: number('Enter your age', [
+    (v) => {
+      if (isNaN(v)) {
+        return {
+          issue: {
+            validation: 'custom',
+            message: 'Enter your age',
+            input: v,
+          },
+        };
+      }
+      return { output: v };
+    },
+    minValue(18, 'You should be adult'),
+  ]),
 });
 
-type UserType = InferInput<typeof UserSchema>;
+export type UserType = InferInput<typeof UserSchema>;
 
 function Form() {
+  const { dispatch } = useAppContext()!;
+
   const {
     register,
     control,
@@ -33,13 +50,14 @@ function Form() {
     defaultValues: {
       fullName: '',
       email: '',
-      age: 0,
+      age: NaN,
     },
     resolver: valibotResolver(UserSchema),
     mode: 'onBlur',
   });
 
   const onSubmit: SubmitHandler<UserType> = (data) => {
+    dispatch({ type: 'SET_USER', payload: data });
     console.log(data);
   };
 
@@ -51,6 +69,7 @@ function Form() {
           variant="faded"
           type="string"
           label="full name"
+          isRequired={true}
           errorMessage={errors.fullName?.message}
           color={errors.fullName ? 'danger' : 'default'}
         />
@@ -59,6 +78,7 @@ function Form() {
           variant="faded"
           type="email"
           label="email"
+          isRequired={true}
           errorMessage={errors.email?.message}
           color={errors.email ? 'danger' : 'default'}
         />
@@ -67,6 +87,7 @@ function Form() {
           variant="faded"
           type="number"
           label="age"
+          isRequired={true}
           errorMessage={errors.age?.message}
           color={errors.age ? 'danger' : 'default'}
         />
