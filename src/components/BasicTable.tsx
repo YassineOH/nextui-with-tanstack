@@ -1,8 +1,11 @@
+import { useState } from 'react';
 import {
   useReactTable,
   getCoreRowModel,
   getPaginationRowModel,
+  getSortedRowModel,
   flexRender,
+  ColumnSort,
 } from '@tanstack/react-table';
 
 import {
@@ -13,6 +16,7 @@ import {
   TableColumn,
   TableBody,
   Pagination,
+  type SortDescriptor,
 } from '@nextui-org/react';
 
 import columns from '../table';
@@ -21,17 +25,28 @@ import { useAppContext } from '../hooks/context';
 
 function BasicTable() {
   const { state } = useAppContext()!;
+  const [sorting, setSorting] = useState<ColumnSort[]>([]);
+  const [sortDesc, setSortDesc] = useState<SortDescriptor>({});
   const table = useReactTable({
     data: state.users,
     columns,
     getCoreRowModel: getCoreRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
+    getSortedRowModel: getSortedRowModel(),
+    state: {
+      sorting,
+    },
+    onSortingChange: setSorting,
   });
+
+  // const keys = table.getHeaderGroups()[0].headers.map((h) => h.id);
 
   return (
     <div className="my-4">
       <Table
         aria-label="Example static collection table"
+        sortDescriptor={sortDesc}
+        onSortChange={(s) => setSortDesc(s)}
         bottomContent={
           <div className="my-1 flex justify-center gap-x-2">
             <Pagination
@@ -49,7 +64,11 @@ function BasicTable() {
       >
         <TableHeader>
           {table.getHeaderGroups()[0].headers.map((header) => (
-            <TableColumn key={header.id}>
+            <TableColumn
+              allowsSorting
+              key={header.id}
+              onClick={header.column.getToggleSortingHandler()}
+            >
               {flexRender(header.column.columnDef.header, header.getContext())}
             </TableColumn>
           ))}
