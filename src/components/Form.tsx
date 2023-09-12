@@ -15,7 +15,8 @@ import {
 } from 'valibot';
 
 const UserSchema = object({
-  id: string(),
+  id: number(),
+  createdAt: string(),
   fullName: string('Enter your full name', [
     minLength(3, 'the should have a least 3 characters'),
   ]),
@@ -52,14 +53,18 @@ function Form() {
       fullName: '',
       email: '',
       age: NaN,
-      id: crypto.randomUUID(),
+      id: -Math.floor(Math.random() * 1000),
+      createdAt: new Date().toString(),
     },
     resolver: valibotResolver(UserSchema),
     mode: 'onBlur',
   });
 
   const onSubmit: SubmitHandler<UserType> = (data) => {
-    dispatch({ type: 'SET_USER', payload: data });
+    dispatch({
+      type: 'SET_USER',
+      payload: { ...data, id: -Math.floor(Math.random() * 1000) },
+    });
     console.log(data);
   };
 

@@ -22,7 +22,7 @@ export default AppContext;
 export const reducer = (state: State, action: Action) => {
   switch (action.type) {
     case 'SET_USER':
-      return { ...state, users: [...state.users, action.payload] };
+      return { ...state, users: [action.payload, ...state.users] };
     default:
       return state;
   }
