@@ -65,7 +65,6 @@ function Form() {
       type: 'SET_USER',
       payload: { ...data, id: -Math.floor(Math.random() * 1000) },
     });
-    console.log(data);
   };
 
   return (

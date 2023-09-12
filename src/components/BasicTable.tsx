@@ -4,6 +4,7 @@ import {
   getCoreRowModel,
   getPaginationRowModel,
   getSortedRowModel,
+  getFilteredRowModel,
   flexRender,
   ColumnSort,
 } from '@tanstack/react-table';
@@ -17,6 +18,7 @@ import {
   TableBody,
   Pagination,
   type SortDescriptor,
+  Input,
 } from '@nextui-org/react';
 
 import columns from '../table';
@@ -26,6 +28,7 @@ import { useAppContext } from '../hooks/context';
 function BasicTable() {
   const { state } = useAppContext()!;
   const [sorting, setSorting] = useState<ColumnSort[]>([]);
+  const [filtering, setFiltering] = useState('');
   const [sortDesc, setSortDesc] = useState<SortDescriptor>({});
   const table = useReactTable({
     data: state.users,
@@ -33,16 +36,22 @@ function BasicTable() {
     getCoreRowModel: getCoreRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
     getSortedRowModel: getSortedRowModel(),
+    getFilteredRowModel: getFilteredRowModel(),
     state: {
       sorting,
+      globalFilter: filtering,
     },
     onSortingChange: setSorting,
+    onGlobalFilterChange: setFiltering,
   });
 
-  // const keys = table.getHeaderGroups()[0].headers.map((h) => h.id);
-
   return (
-    <div className="my-4">
+    <div className="my-6 space-y-4 rounded-md border p-4 shadow-sm">
+      <Input
+        value={filtering}
+        onChange={(e) => setFiltering(e.target.value)}
+        label="filter"
+      />
       <Table
         aria-label="Example static collection table"
         sortDescriptor={sortDesc}
