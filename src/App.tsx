@@ -7,7 +7,7 @@ function App() {
       <h1 className="mb-8 text-center text-2xl font-semibold text-teal-600">
         Next UI and more..
       </h1>
-      <div className="mx-auto w-1/2">
+      <div className="mx-auto w-full lg:w-4/5 xl:w-2/3">
         <Form />
         <BasicTable />
       </div>

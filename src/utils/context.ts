@@ -1,5 +1,5 @@
 import { Dispatch, createContext } from 'react';
-import { type UserType } from './components/Form';
+import { type UserType } from '../utils/schemaValidation';
 
 export type State = {
   users: UserType[];

@@ -21,7 +21,7 @@ import {
   Input,
 } from '@nextui-org/react';
 
-import columns from '../table';
+import columns from '../utils/table';
 
 import { useAppContext } from '../hooks/context';
 

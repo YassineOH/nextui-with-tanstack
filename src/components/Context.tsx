@@ -1,7 +1,7 @@
 import { useReducer } from 'react';
-import { reducer, type State } from '../context';
-import AppContext from '../context';
-import { data } from '../data';
+import { reducer, type State } from '../utils/context';
+import AppContext from '../utils/context';
+import { data } from '../utils/data';
 
 type Props = {
   children: JSX.Element;
