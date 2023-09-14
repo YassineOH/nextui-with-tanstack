@@ -95,11 +95,16 @@ function FormWithoutSubmission({ form }: Props) {
         name="active"
         control={form.control}
         render={({ field }) => (
-          <Checkbox {...field} value={field.value as unknown as string}>
+          <Checkbox
+            {...field}
+            defaultSelected={field.value}
+            value={field.value as unknown as string}
+          >
             Active
           </Checkbox>
         )}
       />
+      {/* <Checkbox {...register('active')}>Active </Checkbox> */}
     </>
   );
 }
