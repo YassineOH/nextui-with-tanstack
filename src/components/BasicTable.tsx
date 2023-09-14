@@ -63,7 +63,6 @@ function BasicTable() {
         aria-label="Example static collection table"
         sortDescriptor={sortDesc}
         onSortChange={(s) => setSortDesc(s)}
-        selectionMode="single"
         bottomContent={
           <div className="my-1 flex justify-center gap-x-2">
             <Pagination

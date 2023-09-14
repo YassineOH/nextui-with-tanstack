@@ -5,10 +5,19 @@ export type State = {
   users: UserType[];
 };
 
-type Action = {
-  type: 'SET_USER';
-  payload: UserType;
-};
+type Action =
+  | {
+      type: 'SET_USER';
+      payload: UserType;
+    }
+  | {
+      type: 'DELETE_USER';
+      payload: number;
+    }
+  | {
+      type: 'UPDATE_USER';
+      payload: UserType;
+    };
 
 type ContextDef = {
   state: State;
@@ -23,6 +32,22 @@ export const reducer = (state: State, action: Action) => {
   switch (action.type) {
     case 'SET_USER':
       return { ...state, users: [action.payload, ...state.users] };
+
+    case 'DELETE_USER':
+      return {
+        ...state,
+        users: state.users.filter((u) => u.id !== action.payload),
+      };
+
+    case 'UPDATE_USER':
+      return {
+        ...state,
+        users: state.users.map((u) => {
+          if (u.id !== action.payload.id) return u;
+          return action.payload;
+        }),
+      };
+
     default:
       return state;
   }

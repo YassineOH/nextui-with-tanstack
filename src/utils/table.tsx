@@ -1,40 +1,13 @@
 import { createColumnHelper } from '@tanstack/react-table';
 import { format } from 'date-fns';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 import { type UserType } from './schemaValidation';
-import { Button } from '@nextui-org/react';
-import { faEdit, faTimes } from '@fortawesome/free-solid-svg-icons';
+
+import EditAndDeleteRow from '../components/EditAndDeleteRow';
 
 const columnHelper = createColumnHelper<UserType>();
 
 const defaultColumns = [
-  columnHelper.display({
-    id: 'actions',
-    header: 'Actions',
-    cell: ({ row }) => (
-      <div className="flex items-center justify-center gap-x-2">
-        <Button
-          isIconOnly
-          onClick={() => row.toggleSelected(true)}
-          color="success"
-          variant="ghost"
-          className="border-none"
-        >
-          <FontAwesomeIcon icon={faEdit} />
-        </Button>
-        <Button
-          isIconOnly
-          onClick={() => row.toggleSelected(false)}
-          color="danger"
-          variant="ghost"
-          className="border-none"
-        >
-          <FontAwesomeIcon icon={faTimes} />
-        </Button>
-      </div>
-    ),
-  }),
   columnHelper.accessor('id', {
     header: 'ID',
   }),
@@ -61,6 +34,12 @@ const defaultColumns = [
   columnHelper.accessor('createdAt', {
     header: 'Creation date',
     cell: (info) => format(new Date(info.getValue()), 'Pp'),
+  }),
+
+  columnHelper.display({
+    id: 'actions',
+    header: 'Actions',
+    cell: ({ row }) => <EditAndDeleteRow user={row.original} />,
   }),
 ];
 
