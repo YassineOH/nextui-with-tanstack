@@ -6,7 +6,8 @@ import {
   getSortedRowModel,
   getFilteredRowModel,
   flexRender,
-  ColumnSort,
+  type ColumnSort,
+  type RowSelectionState,
 } from '@tanstack/react-table';
 
 import {
@@ -28,6 +29,7 @@ import { useAppContext } from '../hooks/context';
 function BasicTable() {
   const { state } = useAppContext()!;
   const [sorting, setSorting] = useState<ColumnSort[]>([]);
+  const [selected, setSelected] = useState<RowSelectionState>({});
   const [filtering, setFiltering] = useState('');
   const [sortDesc, setSortDesc] = useState<SortDescriptor>({});
   const table = useReactTable({
@@ -40,9 +42,14 @@ function BasicTable() {
     state: {
       sorting,
       globalFilter: filtering,
+      rowSelection: selected,
     },
     onSortingChange: setSorting,
     onGlobalFilterChange: setFiltering,
+    onRowSelectionChange: setSelected,
+    enableRowSelection: true,
+    enableMultiRowSelection: false,
+    meta: {},
   });
 
   return (
@@ -56,6 +63,7 @@ function BasicTable() {
         aria-label="Example static collection table"
         sortDescriptor={sortDesc}
         onSortChange={(s) => setSortDesc(s)}
+        selectionMode="single"
         bottomContent={
           <div className="my-1 flex justify-center gap-x-2">
             <Pagination
@@ -94,7 +102,7 @@ function BasicTable() {
           ))}
         </TableBody>
       </Table>
-      {/* Manual button */}
+      {/* Manual pagination button */}
       {/* <div className="flex w-full items-center justify-start gap-x-2">
         <Button onClick={() => table.setPageIndex(0)}>First Page</Button>
         <Button onClick={() => table.previousPage()}>Prev Page</Button>
