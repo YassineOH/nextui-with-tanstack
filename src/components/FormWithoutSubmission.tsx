@@ -23,27 +23,29 @@ type Props = {
     undefined
   >;
 };
-
+console.log('rendering');
 function FormWithoutSubmission({ form }: Props) {
   return (
     <>
       <Input
-        {...form.register('fullName')}
         variant="faded"
         type="string"
         label="full name"
         isRequired={true}
+        {...form.register('fullName')}
+        value={form.watch('fullName')}
         errorMessage={form.formState.errors.fullName?.message}
         color={form.formState.errors.fullName ? 'danger' : 'default'}
       />
       <Input
-        {...form.register('email')}
         variant="faded"
         type="email"
         label="email"
+        {...form.register('email')}
         isRequired={true}
         errorMessage={form.formState.errors.email?.message}
         color={form.formState.errors.email ? 'danger' : 'default'}
+        value={form.watch('email')}
       />
       <Input
         {...form.register('age', { valueAsNumber: true })}
@@ -53,6 +55,7 @@ function FormWithoutSubmission({ form }: Props) {
         isRequired={true}
         errorMessage={form.formState.errors.age?.message}
         color={form.formState.errors.age ? 'danger' : 'default'}
+        value={form.watch('age').toString()}
       />
       {/* <Select
             label="select your gender"
