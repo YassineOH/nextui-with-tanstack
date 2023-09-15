@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { ChangeEvent, useState } from 'react';
 import {
   useReactTable,
   getCoreRowModel,
@@ -8,6 +8,7 @@ import {
   flexRender,
   type ColumnSort,
   type RowSelectionState,
+  type ColumnFiltersState,
 } from '@tanstack/react-table';
 
 import {
@@ -20,6 +21,8 @@ import {
   type SortDescriptor,
   Input,
   Button,
+  Select,
+  SelectItem,
 } from '@nextui-org/react';
 
 import columns from '../utils/table';
@@ -30,9 +33,11 @@ import { data } from '../utils/data';
 
 function BasicTable() {
   const { state, dispatch } = useAppContext()!;
+  const [filterBy, setFilterBy] = useState('auto');
   const [sorting, setSorting] = useState<ColumnSort[]>([]);
   const [selected, setSelected] = useState<RowSelectionState>({});
-  const [filtering, setFiltering] = useState('');
+  const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
+  const [globalFilter, setGlobalFiltering] = useState('');
   const [sortDesc, setSortDesc] = useState<SortDescriptor>({});
   const table = useReactTable({
     data: state.users,
@@ -43,11 +48,13 @@ function BasicTable() {
     getFilteredRowModel: getFilteredRowModel(),
     state: {
       sorting,
-      globalFilter: filtering,
+      globalFilter,
+      columnFilters,
       rowSelection: selected,
     },
     onSortingChange: setSorting,
-    onGlobalFilterChange: setFiltering,
+    onGlobalFilterChange: setGlobalFiltering,
+    onColumnFiltersChange: setColumnFilters,
     onRowSelectionChange: setSelected,
     enableRowSelection: true,
     enableMultiRowSelection: false,
@@ -57,13 +64,50 @@ function BasicTable() {
     dispatch({ type: 'LOAD_USERS', payload: data });
   };
 
+  const handleDispatchingFilter = (e: ChangeEvent<HTMLInputElement>) => {
+    if (filterBy === 'auto') {
+      setGlobalFiltering(e.target.value);
+    } else {
+      table.getColumn(filterBy)?.setFilterValue(e.target.value);
+    }
+  };
+
   return (
     <div className="my-6 space-y-4 rounded-md border p-4 shadow-sm">
-      <Input
-        value={filtering}
-        onChange={(e) => setFiltering(e.target.value)}
-        label="filter"
-      />
+      <div className="flex w-full items-stretch gap-x-4">
+        <Input
+          value={
+            filterBy === 'auto'
+              ? globalFilter
+              : (table.getColumn(filterBy)?.getFilterValue() as string) || ''
+          }
+          onChange={handleDispatchingFilter}
+          label="filter"
+          className="flex-grow-1"
+          placeholder="ex: yassine"
+        />
+        <Select
+          label="column"
+          variant="faded"
+          placeholder="select a column to filter by"
+          value={filterBy}
+          onChange={(e) => {
+            setFilterBy(e.target.value);
+            if (filterBy === 'auto') {
+              setGlobalFiltering('');
+            } else {
+              table.getColumn(filterBy)?.setFilterValue('');
+            }
+          }}
+        >
+          {['auto', 'fullName', 'age', 'email'].map((item) => (
+            <SelectItem key={item} value={item}>
+              {item}
+            </SelectItem>
+          ))}
+        </Select>
+      </div>
+
       <Table
         aria-label="Example static collection table"
         sortDescriptor={sortDesc}
