@@ -39,7 +39,7 @@ function ModalForm({ user, onClose, isOpen }: Props) {
     formState: { isValid },
   } = form;
   return (
-    <Modal isOpen={isOpen}>
+    <Modal isOpen={isOpen} backdrop="blur">
       <ModalContent>
         <ModalHeader>Change user </ModalHeader>
         <form className="w-full space-y-4" onSubmit={handleSubmit(onSubmit)}>

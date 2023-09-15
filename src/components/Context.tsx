@@ -1,14 +1,13 @@
 import { useReducer } from 'react';
 import { reducer, type State } from '../utils/context';
 import AppContext from '../utils/context';
-import { data } from '../utils/data';
 
 type Props = {
   children: JSX.Element;
 };
 
 const initialState: State = {
-  users: data,
+  users: [],
 };
 
 function ContextProvider({ children }: Props) {

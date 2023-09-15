@@ -17,6 +17,10 @@ type Action =
   | {
       type: 'UPDATE_USER';
       payload: UserType;
+    }
+  | {
+      type: 'LOAD_USERS';
+      payload: UserType[];
     };
 
 type ContextDef = {
@@ -47,6 +51,9 @@ export const reducer = (state: State, action: Action) => {
           return action.payload;
         }),
       };
+
+    case 'LOAD_USERS':
+      return { ...state, users: action.payload };
 
     default:
       return state;

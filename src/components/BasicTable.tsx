@@ -17,17 +17,19 @@ import {
   TableRow,
   TableColumn,
   TableBody,
-  Pagination,
   type SortDescriptor,
   Input,
+  Button,
 } from '@nextui-org/react';
 
 import columns from '../utils/table';
 
 import { useAppContext } from '../hooks/context';
+import PaginationTable from './PaginationTable';
+import { data } from '../utils/data';
 
 function BasicTable() {
-  const { state } = useAppContext()!;
+  const { state, dispatch } = useAppContext()!;
   const [sorting, setSorting] = useState<ColumnSort[]>([]);
   const [selected, setSelected] = useState<RowSelectionState>({});
   const [filtering, setFiltering] = useState('');
@@ -51,6 +53,9 @@ function BasicTable() {
     enableMultiRowSelection: false,
     meta: {},
   });
+  const handleLoadUsers = () => {
+    dispatch({ type: 'LOAD_USERS', payload: data });
+  };
 
   return (
     <div className="my-6 space-y-4 rounded-md border p-4 shadow-sm">
@@ -64,18 +69,10 @@ function BasicTable() {
         sortDescriptor={sortDesc}
         onSortChange={(s) => setSortDesc(s)}
         bottomContent={
-          <div className="my-1 flex justify-center gap-x-2">
-            <Pagination
-              showShadow
-              isCompact
-              showControls
-              color="secondary"
-              total={table.getPageCount()}
-              onChange={(p) => {
-                table.setPageIndex(p - 1);
-              }}
-            />
-          </div>
+          <PaginationTable
+            numberOfPages={table.getPageCount()}
+            onChangePage={table.setPageIndex}
+          />
         }
       >
         <TableHeader>
@@ -89,7 +86,9 @@ function BasicTable() {
             </TableColumn>
           ))}
         </TableHeader>
-        <TableBody>
+        <TableBody
+          emptyContent={<Button onClick={handleLoadUsers}>Load Users</Button>}
+        >
           {table.getRowModel().rows.map((row) => (
             <TableRow key={row.id}>
               {row.getVisibleCells().map((cell) => (

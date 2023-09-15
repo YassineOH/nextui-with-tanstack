@@ -23,7 +23,6 @@ type Props = {
     undefined
   >;
 };
-console.log('rendering');
 function FormWithoutSubmission({ form }: Props) {
   return (
     <>
@@ -35,7 +34,13 @@ function FormWithoutSubmission({ form }: Props) {
         {...form.register('fullName')}
         value={form.watch('fullName')}
         errorMessage={form.formState.errors.fullName?.message}
-        color={form.formState.errors.fullName ? 'danger' : 'default'}
+        color={
+          form.formState.errors.fullName
+            ? 'danger'
+            : form.formState.dirtyFields.fullName
+            ? 'primary'
+            : 'default'
+        }
       />
       <Input
         variant="faded"
@@ -44,7 +49,13 @@ function FormWithoutSubmission({ form }: Props) {
         {...form.register('email')}
         isRequired={true}
         errorMessage={form.formState.errors.email?.message}
-        color={form.formState.errors.email ? 'danger' : 'default'}
+        color={
+          form.formState.errors.email
+            ? 'danger'
+            : form.formState.dirtyFields.email
+            ? 'primary'
+            : 'default'
+        }
         value={form.watch('email')}
       />
       <Input
@@ -54,7 +65,13 @@ function FormWithoutSubmission({ form }: Props) {
         label="age"
         isRequired={true}
         errorMessage={form.formState.errors.age?.message}
-        color={form.formState.errors.age ? 'danger' : 'default'}
+        color={
+          form.formState.errors.age
+            ? 'danger'
+            : form.formState.dirtyFields.age
+            ? 'primary'
+            : 'default'
+        }
         value={form.watch('age').toString()}
       />
       {/* <Select
@@ -85,7 +102,7 @@ function FormWithoutSubmission({ form }: Props) {
           >
             {['Female', 'Male'].map((item) => {
               return (
-                <Radio key={item} value={item}>
+                <Radio key={item} value={item} color="primary">
                   {item}
                 </Radio>
               );
